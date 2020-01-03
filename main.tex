@@ -1,0 +1,38 @@
+% A4 paper size by default, use 'letterpaper' for US letter
+\documentclass[11pt, twocolumn]{article}
+% Configure page margins with geometry
+%\geometry{left=1.4cm, top=.8cm, right=1.4cm, bottom=1.8cm, footskip=.5cm}
+
+\usepackage{hyperref}
+\usepackage{biblatex}
+\addbibresource{references.bib}
+
+%-------------------------------------------------------------------------------
+\title{Lorem Ipsum}
+\author{
+    \Large\textbf{Aashish Yadavally, Frederick Maier, Khaled Rasheed,} \\
+    \Large\textbf{Christopher Barrick, Zachary Jones} \vspace{0.1cm}\\
+    \textit{Institute of Artificial Intelligence}\\
+    \textit{The University of Georgia}\\
+    \textit{Athens, GA - 30602}\\
+    \{\href{mailto:ayadavally@uga.edu}{ayadavally}, \href{mailto:fmaier@uga.edu}fmaier,
+    \href{mailto:khaled@uga.edu}khaled, \href{mailto:cbarrick@uga.edu}cbarrick,
+    \href{mailto:zachary.jones@uga.edu}zachary.jones\}@uga.edu
+}
+\date{}
+\begin{document}
+\maketitle
+\begin{abstract}
+    Lorem Ipsum
+\end{abstract}
+
+% Section 1: Introduction
+\input{section1/introduction.tex}
+% Section 2: Related Work
+\input{section2/related_work.tex}
+
+
+%-------------------------------------------------------------------------------
+\printbibliography
+
+\end{document}
