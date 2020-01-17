@@ -1,35 +1,40 @@
-% A4 paper size by default, use 'letterpaper' for US letter
-\documentclass[11pt, twocolumn]{article}
-% Configure page margins with geometry
-%\geometry{left=1.4cm, top=.8cm, right=1.4cm, bottom=1.8cm, footskip=.5cm}
+% Pages in Thesis should have one of standard U.S. Paper Sizes
+% U.S Letter Paper (8.5 x 11) is used.
+% Body should be either 11 pt or 12 pt type.
+\documentclass[12pt, letterpaper]{thesis}
 
 \usepackage{hyperref}
 \usepackage{biblatex}
+\usepackage{afterpage}
 \addbibresource{references.bib}
 
-%-------------------------------------------------------------------------------
-\title{Lorem Ipsum}
-\author{
-    \Large\textbf{Aashish Yadavally, Frederick Maier, Khaled Rasheed,} \\
-    \Large\textbf{Christopher Barrick, Zachary Jones} \vspace{0.1cm}\\
-    \textit{Institute of Artificial Intelligence}\\
-    \textit{The University of Georgia}\\
-    \textit{Athens, GA - 30602}\\
-    \{\href{mailto:ayadavally@uga.edu}{ayadavally}, \href{mailto:fmaier@uga.edu}fmaier,
-    \href{mailto:khaled@uga.edu}khaled, \href{mailto:cbarrick@uga.edu}cbarrick,
-    \href{mailto:zachary.jones@uga.edu}zachary.jones\}@uga.edu
-}
 \date{}
 \begin{document}
-\maketitle
-\begin{abstract}
-    Lorem Ipsum
-\end{abstract}
 
-% Section 1: Introduction
-\input{section1/introduction.tex}
-% Section 2: Related Work
-\input{section2/related_work.tex}
+% Front Matter
+% Except for the "Abstract" page, every page of thesis must be assigned a
+% page number. Placement of consistent page numbers is necessary, and they
+% must either be at center, or at the top-right corner.
+% Page numbering should be roman numerals for the front matter, and numbered
+% for main text.
+\input{front_matter/abstract.tex}
+\pagenumbering{roman}
+\input{front_matter/title.tex}
+\input{front_matter/copyright.tex}
+\input{front_matter/approval.tex}
+\input{front_matter/acknowledgements.tex}
+\input{front_matter/contents.tex}
+\input{front_matter/tables.tex}
+\input{front_matter/figures.tex}
+
+% Chapters in Thesis
+% Chapter 1: Introduction
+\pagenumbering{arabic}
+\input{chapter1/introduction.tex}
+% Chapter 2: Related Work
+\input{chapter2/related_work.tex}
+% Chapter 3: Multi-model Solar Irradiance Forecasting
+\input{chapter3/multi_model.tex}
 
 
 %-------------------------------------------------------------------------------
