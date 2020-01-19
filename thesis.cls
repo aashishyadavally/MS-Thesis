@@ -57,6 +57,53 @@
 % Number and caption of table MUST be placed above the table.
 % Number and caption of figure MUST be placed below the figure.
 
+% Package import for figures
+\usepackage{graphicx}
+% Allows using floating point 'H', which force places figure.
+\usepackage{float}
+
+% Package import for Table of Contents manipulation
+\usepackage{tocloft}
+% Enables hyperlink to page numbers in Table of Contents
+\usepackage[linktocpage=true]{hyperref}
+% Package ensures quality of tables
+\usepackage{booktabs}
+% Package ensures multiple rows in tables
+\usepackage{multirow}
+
+% Command \listchaptername defines heading for Table of Contents
+\newcommand{\listchaptername}{%
+    \begin{center}
+        \normalsize
+        \MakeUppercase{\textbf{Table of Contents}}
+    \end{center}
+}
+
+% Command \listchaptername defines heading for List of Tables
+\renewcommand{\listtablename}{%
+    \begin{center}
+        \normalsize
+        \MakeUppercase{\textbf{List of Tables}}
+    \end{center}
+}
+
+% Command \listchaptername defines heading for List of Figures
+\renewcommand{\listfigurename}{%
+    \begin{center}
+        \normalsize
+        \MakeUppercase{\textbf{List of Figures}}
+    \end{center}
+}
+
+% Command \newlistof creates custom lists, in this case, Table of Contents.
+\newlistof{chapter}{chl}{\listchaptername}
+
+% Add "Page" title for page numbers in "Table of Contents", "List of Tables"
+% and "List of Figures".
+\addtocontents{chl}{~\hfill\textbf{Page}\par}
+\addtocontents{lot}{~\hfill\textbf{Page}\par}
+\addtocontents{lof}{~\hfill\textbf{Page}\par}
+
 
 % ----------------------------------------------------------------------
 %                   Paragraph Indentation
@@ -69,10 +116,6 @@
 % ----------------------------------------------------------------------
 %                Configuration for styles
 % ----------------------------------------------------------------------
-% Initializing a new chapter counter
-{\newcounter{ChapterNumber}
-% Start counter at 1
-\setcounter{ChapterNumber}{1}
 
 % Configuration for Chapter Heading
 % Usage:
@@ -80,73 +123,97 @@
 %
 % If argument #1 is empty, "CHAPTER #NUMBER" is printed. This is needed
 % for chapters in main text. However, for chapters in front text, like 
-% "ACKNOWLEDGEMENTS", chapter heading is unnecessary. 
+% "ACKNOWLEDGEMENTS", chapter heading is not recommended.
 % So, usage for such sections should be:
 % \chapter{1}{Chapter Name}
 \newcommand{\chapter}[2]{%
+    \refstepcounter{chapter}
+    % Define new counter for subchapters.
+    % Check if new counter is already defined. This is the case when
+    % a subchapter variable is already used in a different chapter.
+    \ifcsname c@subchapter\endcsname
+        % Do nothing. Will later set it to 0.
+    \else
+        \newcounter{subchapter}
+    \fi
+    % Print Chapter Information
     \begin{center}
         \ifx&#1&
-            \textbf{CHAPTER \arabic{ChapterNumber}}
-            % Increase value of chapter counter by 1.
-            \stepcounter{ChapterNumber}
-            \vspace*{0.5\baselineskip}
-            % Define new counter for subchapters.
-            % Check if new counter is already defined.
-            % This is the case when a subchapter variable
-            % is already used in a different chapter.
-            \ifcsname c@SubChapterNumber\endcsname
-                % Do nothing. Will later set it to 1.
-            \else
-                \newcounter{SubChapterNumber}
-            \fi
-            % Start counter at 1
-            \setcounter{SubChapterNumber}{1}
+            \textbf{CHAPTER \thechapter}
         \else
-            % Do not print Chapter information.    
+            % Do-not print chapter information for front-matter chapters.
+            % The counter which is increased by referencing \chapter
+            % command for creating front-matter chapters, which do not
+            % require chapter information, is decreased by 1.
+            \addtocounter{chapter}{-1}
         \fi
-        
+
+        % Do not remove the above blank line. It helps print blank space
+        % (in this case, double-space) between chapter information and
+        % chapter heading. It can also be replicated with a certain
+        % factor (x) of \baselineskip by using:
+        % \vspace*{x\baselineskip}
         \MakeUppercase{\textbf{#2}}
         \vspace*{\baselineskip}
     \end{center}
+    \addcontentsline{chl}{chapter}
+    {\protect\numberline{
+        \ifx&#1&
+            \quad\thechapter. \MakeUppercase{#2}
+        \else
+        % No chapter information
+            \MakeUppercase{#2}
+        \fi
+        } 
+    }
 }
 
-
-% Configuration for SubChapter Heading
+% Configuration for Sub-chapter Heading
 % Usage:
 % \subchapter{Sub-chapter Name}
 \newcommand{\subchapter}[1]{%
-    \vspace{\baselineskip}
-
-    \MakeUppercase{\textbf{\the\numexpr\value{ChapterNumber}-1\relax%
-                           .\arabic{SubChapterNumber} #1}}
-    \vspace{\baselineskip}
-    \newline
-    \stepcounter{SubChapterNumber}
+    \refstepcounter{subchapter}
     % Define new counter for subsubchapters.
-    % Check if new counter is already defined.
-    % This is the case when a subsubchapter variable
-    % is already used in a different chapter.
-    \ifcsname c@SubSubChapterNumber\endcsname
-        % Do nothing. Will later set it to 1.
+    % Check if new counter is already defined. This is the case when
+    % a subsubchapter variable is already used in a different subchapter.
+    \ifcsname c@subsubchapter\endcsname
+        % Do nothing. Will later set it to 0.
     \else
-        \newcounter{SubSubChapterNumber}
+        \newcounter{subsubchapter}
     \fi
-    % Start counter at 1
-    \setcounter{SubSubChapterNumber}{1}
+    % Print sub chapter information.
+    \vspace{0.5\baselineskip}
+    \normalsize
+    \textbf{\thechapter.\thesubchapter \MakeUppercase{ #1}}
+    \vspace{0.5\baselineskip}
+
+    % Do not remove the above blank line. It helps print blank space
+    % (in this case, double-space) between sub-chapter heading and
+    % contents.
+    \addcontentsline{chl}{chapter}
+    {\qquad\protect\numberline{
+        \thechapter.\thesubchapter
+        } \hspace{0.5em} #1
+    }
 }
 
 % Configuration for Sub-sub-chapter Heading
 % Usage:
 % \subsubchapter{Sub-sub-chapter Name}
 \newcommand{\subsubchapter}[1]{%
-    \vspace{\baselineskip}
-    % SubChapterNumber counter is increased by 1 at the end of
-    % command definition. That should be undone while using the
-    % counter in subsubchapter numbering.
-    \MakeUppercase{\textbf{\the\numexpr\value{ChapterNumber}-1\relax%
-                           .\the\numexpr\value{SubChapterNumber}-1\relax%
-                           .\arabic{SubSubChapterNumber} #1}}
-    \vspace{\baselineskip}
-    \newline
-    \stepcounter{SubSubChapterNumber}
+    \refstepcounter{subsubchapter}
+    \vspace{0.5\baselineskip}
+    \normalsize
+    \textbf{\thechapter.\thesubchapter.\thesubsubchapter%
+            \MakeUppercase{ #1}}
+    \vspace{0.5\baselineskip}
+
+    % Do not remove the above blank line. It helps print blank space
+    % (in this case, double-space) between sub-chapter heading and
+    % contents.
+    \addcontentsline{chl}{chapter}
+    {\qquad\qquad\protect\numberline{
+        \thechapter.\thesubchapter.\thesubsubchapter
+        } \hspace{1em} #1
+    }
 }
