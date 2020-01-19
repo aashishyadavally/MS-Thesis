@@ -109,6 +109,7 @@
 %                   Paragraph Indentation
 % ----------------------------------------------------------------------
 % Paragraphs are distinguished by indentation.
+\usepackage{indentfirst}
 \setlength{\parindent}{2em}
 \setlength{\parskip}{1em}
 
@@ -184,6 +185,7 @@
     % Print sub chapter information.
     \vspace{0.5\baselineskip}
     \normalsize
+    \noindent
     \textbf{\thechapter.\thesubchapter \MakeUppercase{ #1}}
     \vspace{0.5\baselineskip}
 
@@ -203,6 +205,7 @@
 \newcommand{\subsubchapter}[1]{%
     \refstepcounter{subsubchapter}
     \vspace{0.5\baselineskip}
+    \noindent
     \normalsize
     \textbf{\thechapter.\thesubchapter.\thesubsubchapter%
             \MakeUppercase{ #1}}
