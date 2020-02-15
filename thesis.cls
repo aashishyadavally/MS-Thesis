@@ -133,7 +133,7 @@
     % Check if new counter is already defined. This is the case when
     % a subchapter variable is already used in a different chapter.
     \ifcsname c@subchapter\endcsname
-        % Do nothing. Will later set it to 0.
+        \setcounter{subchapter}{0}
     \else
         \newcounter{subchapter}
     \fi
@@ -178,7 +178,7 @@
     % Check if new counter is already defined. This is the case when
     % a subsubchapter variable is already used in a different subchapter.
     \ifcsname c@subsubchapter\endcsname
-        % Do nothing. Will later set it to 0.
+        \setcounter{subsubchapter}{0}
     \else
         \newcounter{subsubchapter}
     \fi
