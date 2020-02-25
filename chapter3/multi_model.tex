@@ -11,6 +11,8 @@ A variety of solar irradiance forecasting techniques targeted at different forec
     \end{center}
 \end{figure}
 
+\restoregeometry
+
 \par The numerical weather prediction models derive their initial conditions from different ground and airborne sensors from across the world, and based on equations describing the physical processes occurring in the atmosphere, forecast a parameter into the forecast horizon. The National Oceanic and Atmospheric Administration (NOAA) operates a variety of numerical weather prediction models with their spatial resolution ranging from approximately 10 km - 50 km, and their temporal reoslution typically being 1 hour or 3 hours, and which are normally updated every 6 hours \cite{multimodel_bestpractices}. 
 
 \par In this work, we intended to forecast solar irradiance captured at the solar farm in Athens, Georgia for a forecast horizon of 24 hours. For this purpose, a mesoscale model which can predict parameters describing cloudiness such as \textit{North American Mesoscale (NAM)} Forecast System \cite{multimodel_nam} was used. Typical weather variables known to affect solar irradiance forecasting systems such as air temperature, geopotential height, cloud cover, visibility, wind speed, dew point temperature, air pressure, downwelling shortwave radiation flux, downwelling longwave radiation flux, and humidity were evaluated so as to gauge their effect on the solar irradiance predictions. This enabled a cut in computational cost of modeling and also led to an improvement in the performance of the model.
