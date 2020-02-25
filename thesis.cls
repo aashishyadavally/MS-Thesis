@@ -26,14 +26,10 @@
 %     must be 1 inch.
 % (b) Side Margins: 1 inch (only left margin can be 1.5in for binding purposes)
 % (c) Bottom Margin: 1 inch
-\usepackage[left=1.5in, top=1.75in, right=1in, bottom=1in,%
+\usepackage[left=1.5in, top=1in, right=1in, bottom=1in,%
             footskip=0.25in]{geometry}
-% To change page layout for remaining pages apart from Chapter Heading Page, use this:
-% \afterpage{%
-% \newgeometry{left=1.5in, top=1in, right=1in, bottom=1in,%
-%             footskip=0.25in}
-% \clearpage
-% \restoregeometry
+% To change page layout for remaining pages apart from Chapter Heading Page, use 
+% `\restoregeometry` at the end of the first page of Chapter Heading Page.
 % }
 
 
@@ -128,6 +124,11 @@
 % So, usage for such sections should be:
 % \chapter{1}{Chapter Name}
 \newcommand{\chapter}[2]{%
+    % Chapter Heading page has a top margin of 1.75 inches.
+    % Rest of the chapter pages has margin of 1 inch.
+    % This can be retrieving by using the command:
+    % `\restoregeometry` at the end of the first page of Chapter.
+    \newgeometry{top=1.75in}
     \refstepcounter{chapter}
     % Define new counter for subchapters.
     % Check if new counter is already defined. This is the case when
