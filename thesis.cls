@@ -75,7 +75,7 @@
     \end{center}
 }
 
-% Command \listchaptername defines heading for List of Tables
+% Command \listtablename defines heading for List of Tables
 \renewcommand{\listtablename}{%
     \begin{center}
         \normalsize
@@ -83,7 +83,7 @@
     \end{center}
 }
 
-% Command \listchaptername defines heading for List of Figures
+% Command \listfigurename defines heading for List of Figures
 \renewcommand{\listfigurename}{%
     \begin{center}
         \normalsize

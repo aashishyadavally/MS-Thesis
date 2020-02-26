@@ -6,8 +6,8 @@ A variety of solar irradiance forecasting techniques targeted at different forec
 \begin{figure}[htbp]
     \begin{center}
     	\includegraphics[width=0.75\textwidth]{chapter3/fig_variability.png}
-    	\label{fig:fig_variability}
     	\caption[Solar forecasting methods based on varied spatial and temporal scales]{Solar forecasting methods based on varied spatial and temporal scales\cite{multimodel_figure1}.}
+    	\label{fig:fig_variability}
     \end{center}
 \end{figure}
 
@@ -29,8 +29,8 @@ Meteorological forecasts from Numerical Weather Prediction (NWP) models have suc
 \begin{figure}[htbp]
     \begin{center}
     	\includegraphics[width=0.85\textwidth]{chapter3/fig_nam_dswrf.png}
-    	\label{fig:fig_nam_dswrf}
     	\caption[Downward shortwave radiation flux parameter for 06h, 12h, 18h, 24h forecasts in a day for NAM model data]{Downward Shortwave Radiation Flux parameter from NAM data over North America domain for 06h forecast (top-left), 12h forecast (top-right), 18h forecast (bottom-left) and 24h forecast (bottom-right) for 11th February, 2020.}
+    	\label{fig:fig_nam_dswrf}
     \end{center}
 \end{figure}
 
@@ -57,8 +57,8 @@ Decomposition models typically utilize only data pertaining to global radiation 
 \par As mentioned in 3.1.1, North America Mesoscale (NAM) model data was collected from the years 2017 and 2018 for experiments. From the NAM model data, surface-level parameters as described in Table \ref{Tab:table_nam_variables} were retrieved and analyzed. NAM model projects each of the features 36 hours into the future at a 1-hour temporal resolution, and subsequent 48 hours at a 3-hour temporal resolution. In this work, we analyze the first 24 hours projections of the features against the corresponding target pyranometer readings.
 \begin{table}[h]
 \begin{center}
-    \label{Tab:table_nam_variables}
     \caption{NWP-NAM variables retrieved for solar forecasting}
+    \label{Tab:table_nam_variables}
     \begin{tabular}{ c c }
     	\toprule
     	Label & Description \\
@@ -87,8 +87,8 @@ Decomposition models typically utilize only data pertaining to global radiation 
 \begin{figure}[htbp]
     \begin{center}
     	\includegraphics[width=0.85\textwidth]{chapter3/fig_pyranometers.png}
-    	\label{fig:fig_pyranometers}
     	\caption[Fixed axis, Single-axis tracking, Dual-axis tracking Solar Arrays]{Fixed axis (left), Single-axis tracking (center), Dual-axis tracking (right) Solar Arrays.}
+    	\label{fig:fig_pyranometers}
     \end{center}
 \end{figure}
 
@@ -97,8 +97,8 @@ The solar radiation captured by the fixed axis solar array, i.e, array B is redu
 \begin{figure}[htbp]
     \begin{center}
     	\includegraphics[width=0.65\textwidth]{chapter3/fig_average_irradiance.png}
-    	\label{fig:fig_average_irradiance}
     	\caption[Average monthly solar radiation captured by arrays A, B and E through 2017.]{Average monthly solar radiation captured by arrays A, B and E through 2017.}
+    	\label{fig:fig_average_irradiance}
     \end{center}
 \end{figure}
 
@@ -110,8 +110,8 @@ On the weather forecast features from the NAM dataset as described in 3.2, featu
 \begin{figure}[htbp]
     \begin{center}
     	\includegraphics[width=\textwidth]{chapter3/fig_mi_ugabpoa1irr.png}
-    	\label{fig:fig_mi_forecast_target_hr1}
     	\caption[Mutual information between NAM feature projection forecast and corresponding solar array B irradiance]{Mutual information between NAM feature projection forecast and corresponding solar array B irradiance.}
+    	\label{fig:fig_mi_forecast_target_hr1}
     \end{center}
 \end{figure}
 
@@ -122,8 +122,8 @@ In Fig.\ref{fig:fig_mi_forecast_target_hr1}, mutual information between NAM feat
 \begin{figure}[htbp]
     \begin{center}
     	\includegraphics[width=0.65\textwidth]{chapter3/fig_mi_forecast_target.png}
-    	\label{fig:fig_mi_forecast_target}
     	\caption[Mutual information between Downward Shortwave Radiation Flux feature projection forecasts and irradiance observations for target hours in the forecast horizon from Solar Array B]{Mutual information between feature projection forecasts of Downward Shortwave Radiation Flux (DSWRF\_SFC) and irradiance observations for target hours in the forecast horizon on Solar Array B.}
+    	\label{fig:fig_mi_forecast_target}
     \end{center}
 \end{figure}
 
@@ -141,8 +141,8 @@ Thus, the machine learning models used for postprocessing solar irradiance had 1
 \begin{figure}[htbp]
     \begin{center}
     	\includegraphics[width=\textwidth]{chapter3/fig_ghi_comparison.png}
-    	\label{fig:fig_ghi_comparison}
     	\caption[Comparing GHI-Clearsky-Scaling and GHI-NAM for 00h, 06h, 12h, 18h forecasts]{Comparing GHI-Clearsky-Scaling and GHI-NAM for 00h, 06h, 12h, 18h forecasts.}
+    	\label{fig:fig_ghi_comparison}
     \end{center}
 \end{figure}
 
@@ -155,8 +155,8 @@ Lorenz et al. \cite{expansion_lorenz} found that expanding the forecast region t
 \begin{figure}[htbp]
     \begin{center}
     	\includegraphics[width=0.65\textwidth]{chapter3/fig_geoshapes.png}
-    	\label{fig:fig_geoshapes}
     	\caption[Geographic expansion of forecast coverage around Athens NAM model data grid]{Geographic expansion of forecast coverage with 1 x 1 Geo Shape representing Athens NAM model data grid, 3 x 3 Geo Shape and 5 x 5 Geo Shape representing grid of cells around Athens.}
+    	\label{fig:fig_geoshapes}
     \end{center}
 \end{figure}
 
