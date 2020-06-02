@@ -128,7 +128,7 @@
     % Rest of the chapter pages has margin of 1 inch.
     % This can be retrieving by using the command:
     % `\restoregeometry` at the end of the first page of Chapter.
-    \newgeometry{top=1.75in}
+    \newgeometry{top=1.75in, left=1.5in, right=1in, bottom=1in}
     \refstepcounter{chapter}
     % Define new counter for subchapters.
     % Check if new counter is already defined. This is the case when
