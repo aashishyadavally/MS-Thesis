@@ -28,8 +28,8 @@
 % (c) Bottom Margin: 1 inch
 \usepackage[left=1.5in, top=1in, right=1in, bottom=1in,%
             footskip=0.25in]{geometry}
-% To change page layout for remaining pages apart from Chapter Heading Page, use 
-% `\restoregeometry` at the end of the first page of Chapter Heading Page.
+% To change page layout for remaining pages apart from Chapter Heading Page, use
+% `\restoregeometry` at the end of the first page of the Chapter Heading Page.
 % }
 
 
@@ -75,7 +75,7 @@
     \end{center}
 }
 
-% Command \listchaptername defines heading for List of Tables
+% Command \listtablename defines heading for List of Tables
 \renewcommand{\listtablename}{%
     \begin{center}
         \normalsize
@@ -83,7 +83,7 @@
     \end{center}
 }
 
-% Command \listchaptername defines heading for List of Figures
+% Command \listfigurename defines heading for List of Figures
 \renewcommand{\listfigurename}{%
     \begin{center}
         \normalsize
@@ -121,9 +121,10 @@
 % If argument #1 is empty, "CHAPTER #NUMBER" is printed. This is needed
 % for chapters in main text. However, for chapters in front text, like 
 % "ACKNOWLEDGEMENTS", chapter heading is not recommended.
+% Argument #2 is the chapter's name entry to Table of Contents.
 % So, usage for such sections should be:
-% \chapter{1}{Chapter Name}
-\newcommand{\chapter}[2]{%
+% \chapter{1}{TOC Entry}{Chapter Name}
+\newcommand{\chapter}[3]{%
     % Chapter Heading page has a top margin of 1.75 inches.
     % Rest of the chapter pages has margin of 1 inch.
     % This can be retrieving by using the command:
@@ -155,18 +156,21 @@
         % chapter heading. It can also be replicated with a certain
         % factor (x) of \baselineskip by using:
         % \vspace*{x\baselineskip}
-        \MakeUppercase{\textbf{#2}}
+        \MakeUppercase{\textbf{#3}}
         \vspace*{\baselineskip}
     \end{center}
+
+    % If chapter comes with empty #1 argument, i.e. corresponds to Front Matter,
+    % Chapter index isn't printed. Otherwise, Chapter Number is printed.
+    \ifx&#1&
+        \def \chapterheading {\thechapter. \MakeUppercase{#2}}
+    \else
+        \def \chapterheading {\MakeUppercase{#2}}
+    \fi
+    % Add chapter name to Table of Contents
     \addcontentsline{chl}{chapter}
-    {\protect\numberline{
-        \ifx&#1&
-            \quad\thechapter. \MakeUppercase{#2}
-        \else
-        % No chapter information
-            \MakeUppercase{#2}
-        \fi
-        } 
+    {
+        \chapterheading \hspace{0.5em}
     }
 }
 
