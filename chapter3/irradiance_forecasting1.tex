@@ -1,0 +1,439 @@
+\chapter{}{{Solar Forecasting Using Numerical Weather Prediction Models}}{Solar Irradiance Forecasting Using Numerical Weather Prediction Models}
+
+\subchapter{Overview}
+For days-ahead forecast horizon, regional and global numerical weather prediction models, predicting the evolution of the atmospheric system have been shown to be more appropriate and accurate \cite{thesis_zach}. The numerical weather prediction models derive their initial conditions from different ground and airborne sensors from across the world. Based on thermodynamic equations describing the physical processes occurring in atmosphere, they forecast different weather variables into the forecast horizon. The National Oceanic and Atmospheric Administration (NOAA) operates a variety of numerical weather prediction models with their spatial resolution ranging from approximately 10 km - 50 km, and their temporal resolution typically being 1 hour or 3 hours -  which are normally updated every 6 hours \cite{multimodel_bestpractices}. 
+
+\par Solar forecasting researchers have successfully employed meteorological forecasts from Numerical Weather Prediction (NWP) models for forecasting applications for years. The making of a weather forecast involves assessing the current weather situation, assimilating observational information, and projecting this initial state into future based on the laws of thermodynamics. Weather forecasting employs a set of equations that describe the flow of fluids, being run over a geographic area. Several parameterizations of physical processes are carried out, based on the physical and statistical representations of the physical process. This is useful to approximate the bulk effects of the physical processes.
+
+\par One of the major challenges faced in this process is determining the range of area to observe. As shown in Fig.~\ref{fig:fig_variability}, the further the forecasting of the weather conditions, i.e, higher the forecast horizon, wider is the range of area that needs to be observed. Multiple weather prediction models, both global and regional, depending on the spatial domain, are maintained by the National Oceanic \restoregeometry\noindent and Atmospheric Administration (NOAA). Global Forecast System (GFS) is one of the widely-known global weather prediction models, which represents the atmospheric state as a superposition of wave functions. It covers the entire globe at a base horizontal resolution of $28km$ between grid points, predicting weather out to $16$ days. Within continental United States, North America Mesoscale (NAM), Rapid Refresh (RAP), High Resolution Rapid Refresh (HRRR) are the popular regional weather prediction models, each having it's own advantages. The NAM model follows a complex cloud prediction scheme accounting for the internal cloud processes, and thus has better cloud parameterizations over RAP and HRRR. 
+
+\par In this work, we intended to forecast solar irradiance captured at multiple dual-axis tracking (array A), fixed-axis (array B) and single-axis tracking (array E) solar arrays at the solar farm in Athens, Georgia for a forecast horizon of 24 hours. For this purpose, a mesoscale model such as the \textit{North American Mesoscale (NAM)} Forecast System \cite{multimodel_nam} which can predict parameters describing cloudiness was used. A weather forecast dataset spanning NAM data for the years 2017 and 2018 was created, though a few forecasts are missing sporadically. In order to gauge the effect of different weather variables specified by NAM Forecast System on the solar irradiance predictions, the following were evaluated: air temperature, geopotential height, cloud cover, visibility, wind speed, dew point temperature, air pressure, downwelling shortwave radiation flux, downwelling longwave radiation flux, and humidity.
+
+\par From among these weather variables, relevant ones were identified with the help of \textit{random forests}. Random forests are often used for such feature selection purposes because the underlying tree-based strategies used by random forests naturally rank the features based on how well they improve the purity of the node, i.e. decrease the mean \textit{gini impurity} measure across all trees. It was observed that the irradiance readings from the solar farm for each of the arrays were influenced more by the surface temperature, downwelling short-wave radiation flux, total cloud cover, and atmospheric height. Thus, the remaining weather variables were discarded. This enabled a cut in computational cost of modeling and also led to an improvement in the performance of the models.
+
+\par Each of the weather variables in the NAM Forecast Model are projected 36 hours into the future, at a 1-hour temporal resolution. Of these, the affect of the first 24 feature projections on the target solar irradiance was analyzed based on the \textit{mutual information} statistical measure. It was realized that the weather variable for a particular target hour offset in the forecast horizon depends on only 6 feature projections following the target hour offset, and 6 feature projections preceding the target hour offset. Separate machine learning models were trained, and the efficacy of the proposed input-selection scheme was tested. The performance of this input-selection scheme was compared with the methodology followed by Jones et al. \cite{thesis_zach}. It was observed that the input-selection scheme resulted in an average improvement in mean absolute error ($MAE$) across machine learning models by 19.05\%, 19.68\% and 10.65\% for arrays A, B and E respectively. Random forest models achieved a best performance with an $MAE$ of 72.63 $W/m^2$, 44.94 $W/m^2$ and 63.60 $W/m^2$ for each of the arrays.
+
+\par The affect of the geographic expansion of weather forecast coverage was analyzed by including the $3 x 3$ and $5 x 5$ \textit{geo shapes}, wherein weather forecasts data from 8 and 24 NAM data grid cells centered around the NAM data grid representing Athens, Georgia were incorporated respectively. Such a spatial expansion was assessed for the attribute-selected weather forecast data, obtained by incorporating the input-selection scheme. It was realized that such a geographic expansion had a detrimental effect on the other machine learning models, and had a marginal improvement on the random forests, with the $5 x 5$ \textit{geo shape} resulting in $MAE$ of 69.38 $W/m^2$, 43.62 $W/m^2$, 61.99 $W/m^2$ for arrays A, B and E respectively.  
+
+\subchapter{North America Mesoscale (NAM) Weather Prediction Model}
+\par The North America Mesoscale (NAM) Forecast System is based on the Weather Research and Forecasting (WRF) model infrastructure, following non-hydrostatic dynamics and thus enabling vertical momentum estimations. It provides high resolution forecasts over North America for a forecast horizon of 84 hours, the first 36 of which are at a one hour temporal resolution, and the remaining thereafter, at a 3 hour temporal resolution. The forecasts are published for a grid spanning approximately $12km$ x $12 km$ across the continental United States, which are released four times daily at 00h, 06h, 12h and 18h UTC.
+
+\begin{figure}[ht]
+    \begin{center}
+    	\includegraphics[width=0.85\textwidth]{chapter3/fig_nam_dswrf.png}
+    	\caption[Downward shortwave radiation flux parameter for 06h, 12h, 18h, 24h UTC forecasts in a day for NAM model data]{Downward Shortwave Radiation Flux parameter from NAM data over North America domain for 06h forecast (top-left), 12h forecast (top-right), 18h forecast (bottom-left) and 24h forecast (bottom-right) UTC for 11th February, 2020.}
+    	\label{fig:fig_nam_dswrf}
+    \end{center}
+\end{figure}
+
+
+\par Following the update in 2017, the current version of the NAM model follows Janjic-modified Betts-Miller convection \cite{multimodel_janjic} for parameterization of physical processes, RTM-based longwave and shortwave prediction scheme, and an updated Ferrier-Aligo predictive cloud scheme \cite{multimodel_cloud}. The NWP models cannot realize the  physical phenomenon occurring within an individual grid. However, vertical redistribution of heat and moisture can easily occur between mesoscale grids resulting in sub grid-scale variations in convection. The Janjic-modified Betts-Miller convection scheme nudges the temperature and moisture profiles in a grid towards a specific reference profile through repeated observations, thus improving the convection parameterizations in the NAM model by decreasing the convective instability.
+
+\par For convective time scales of the order of 30 minutes to 1 hour, radiative heating rates are negligible. However, for the NAM data which has a forecast length of 84 hours, radiative transfer processes in the clouds need to be taken into consideration as well. In a cloud-free atmosphere, the primary absorbers of shortwave radiation are ozone and water vapour. However, in a cloudy atmosphere, shortwave radiation is more complicated, and a spectrum of radiative frequencies on cloud absorption, reflection and transmission need to be considered \cite{multimodel_rtm}. The NAM models implement the columnar RTM models in this effect, which for each vertical level parameterize the cloud radiative properties.
+
+\par Dozens of parameters are available in a NAM model data grid pertaining to environmental components such as altitude, atmospheric pressure, atmospheric radiation, air temperature, water vapour, atmospheric winds, precipitation, soil properties and cloud cover. The features are spread across 60 vertical levels in a 0 - 3 km layer, and across 39 pressure levels from 50mb to 1000mb at 25mb intervals. From among these parameters, in Fig.~\ref{fig:fig_nam_dswrf}\footnote{NAM forecast snapshots retrieved from: \url{https://www.emc.ncep.noaa.gov/mmb/mmbpll/etapll}}, the averaged downwelling short-wave radiation flux over North America for the four forecasts on 11th February, 2020 is reported.
+
+\subsubchapter{Data Collection}
+\subsubsection*{Weather Forecasts}
+\par As mentioned in 3.1.1, North America Mesoscale (NAM) model data was collected from the years 2017 and 2018 for experiments. From this data, surface-level parameters as described in Table \ref{Tab:table_nam_variables} were retrieved and analyzed. NAM Forecast Model projects different weather parameters 84 hours into the future. The first 36 feature projections in the forecast horizon are at a 1-hour temporal resolution, and subsequent 48 hours of the forecast horizon has feature projections at a 3-hour temporal resolution. In this work, we consider the first 24 feature projections (which are at a 1-hour temporal resolution) for each of the weather parameters along with their corresponding target pyranometer readings. 
+
+\begin{table}[h]
+\begin{center}
+    \caption{NWP-NAM variables retrieved for solar forecasting}
+    \label{Tab:table_nam_variables}
+    \begin{tabular}{ c c c}
+    	\toprule
+    	\textbf{Label} & \textbf{Description} & \textbf{Unit} \\
+    	\midrule
+    	PRES\_SFC & Air Pressure & $Pa$\\
+    	HGT\_SFC & Geopotential Height & $gpm$ \\
+    	HGT\_TOA & Height at Planetary Boundary Layer & $gpm$ \\
+    	TMP\_SFC & Air Temperature & $K$\\
+    	VIS\_SFC & Visibility & $m$\\
+    	UGRD\_TOA & U-Component of Wind Speed & $m/s$\\
+    	VGRD\_TOA & V-Component of Wind Speed & $m/s$\\
+    	DSWRF\_SFC & Downward Short-Wave Radiation Flux & $W/m^2$\\
+    	DLWRF\_SFC & Downward Long-Wave Radiation Flux & $W/m^2$\\
+    	TCC\_EATM & Total Cloud Cover & $\%$ \\
+    	\bottomrule
+    \end{tabular}
+\end{center}
+\end{table}
+
+\subsubsection*{Temporal Features}
+\par In \cite{thesis_zach}, Jones et al. extracted temporal features by parameterizing the \textit{time of day} and \textit{time of year} of the forecasts. These measures were computed by scaling the epoch representing the reference time (in nanoseconds) with the inverse of $8.64e+13$ (number of nanoseconds in a day) and $3.1536e+16$ (number of nanoseconds in a year) respectively. The sine and cosine values of these measures were included, resulting in four temporal features, two each representing the \textit{time of day} and \textit{time of year}. However, this approach fails to capture the cyclicity of the reference time in a particular day, or that of a day in a particular month, in a year. In this work, these parameterizations  were modified to represent the hour in a day and the day in a month respectively. The \textit{time of day} was computed by scaling the number of seconds in the reference time with the inverse of $8.64e+4$ (number of seconds in a day); and the \textit{time of year} was computed by scaling the day of the year with the inverse of $365$ or $366$, depending on whether it is a leap year or not. The sine and cosine values of these measures were added as the temporal features. Additionally, such temporal features of the reference time representing the corresponding target hours were also included in their respective predictors.
+
+\subsubsection*{Irradiance Observations}
+\par Georgia Power, in collaboration with the University of Georgia set up a 1MW solar facility in Athens, Georgia. The irradiance observations are obtained from three solar arrays in the solar farm, namely array A, array B and array E, representing a dual-axis tracking array, fixed axis array with 200$^{\circ}$(SW) azimuth, and a single-axis tracking array respectively. Each of the solar arrays are installed with thermopile pyranometers from different manufacturers such as Kipp \& Zonen\footnote{\url{https://www.kippzonen.com/}}, and LICOR\footnote{\url{https://www.licor.com/}}. The thermopile pyranometers have a black absorptive surface which uniformly absorbs the solar radiation across the short-wave solar spectrum, i.e, between 0.2 $\mu m$ and 3 $\mu m$. 
+
+\begin{figure}[ht]
+    \begin{center}
+    	\includegraphics[width=0.85\textwidth]{chapter3/fig_pyranometers.png}
+    	\caption[Fixed axis, Single-axis tracking, Dual-axis tracking Solar Arrays]{Fixed axis (left), Single-axis tracking (center), Dual-axis tracking (right) Solar Arrays.}
+    	\label{fig:fig_pyranometers}
+    \end{center}
+\end{figure}
+
+The fixed axis solar array, i.e, array B has limited exposure to the sun, owing to the change in position of the sun during the day from morning to night. Thus, the solar radiation captured by array B is reduced. Though this limitation is minimized by installing the fixed solar array at an optimized tilt angle, the solar radiation captured by solar tracking arrays is still considerably higher. In order to maximize the overall solar energy captured, it is necessary to ensure that the angle of incidence of the sunlight on the solar array is constantly perpendicular. This is achieved with the help of single-axis trackers (horizontal and vertical), which have one degree of freedom acting as an axis of rotation; and dual-axis trackers which have two degrees of freedom acting as axes of rotation normal to one another \cite{irradiance_solartracker}. This ability to move along the axes enhances the morning and afternoon performance of the solar tracking systems.
+
+\begin{figure}[ht]
+    \begin{center}
+    	\includegraphics[width=0.85\textwidth]{chapter3/fig_average_irradiance.png}
+    	\caption[Average monthly solar radiation captured by arrays A, B and E through 2017.]{Average monthly solar radiation captured by dual-axis (array A), fixed-axis (array B) and single-axis (array E) through 2017.}
+    	\label{fig:fig_average_irradiance}
+    \end{center}
+\end{figure}
+
+While the irradiance observations from the solar arrays are received every five seconds, the NWP NAM model data is available only for four reference times in a day, i.e 00h, 06h, 12h, 18h UTC through 2017 and 2018. Thus, for the target hours in the forecast horizon of all the reference times in 2017 and 2018, for which the NWP NAM model data was collected, the irradiance observations were sampled. In Fig.~\ref{fig:fig_average_irradiance}, the average monthly solar radiation captured by arrays A, B and E through 2017 is shown. It can be observed that the solar radiation captured by the tracking arrays, i.e, array A and array E is consistently higher than that captured by the fixed axis array, i.e array B.
+
+\subsubchapter{Evaluating Impact of Weather Variables on Irradiance Observations}
+\par Mutual information is the measure between two possibly multi-dimensional variables, which quantifies the amount of information obtained from one variable about the other. The relationship detected between the variables can involve either mean, variance or even the higher moments \cite{feature_selection_mi}. The most straightforward and widespread approach towards estimating mutual information follows partitioning the supports of $X$ and $Y$ into bins of finite size, and approximating the sum in the following way:
+\begin{equation}\label{eq:eq_mi}
+I(X, Y) \approx I_{binned}(X, Y) \equiv \sum_{ij} p(i, j) . log(\frac{p(i, j)}{p_x(i).p_y(j)})
+\end{equation}
+
+In this work, the mutual information measure was estimated using the \textit{scikit-learn}\footnote{\url{https://scikit-learn.org/stable/}} machine learning software, which makes use of a non-parametric method based on entropy estimation from the k-nearest neighbors as described in \cite{feature_selection_mi} and \cite{feature_selection_mi2}. Mutual information measure was calculated for the different weather parameters from the NAM data and the irradiance observations from the solar arrays as described in the previous subsections. In Fig. \ref{fig:fig_mi_forecast_target_hr1}, mutual information between different NAM feature projections for the first forecast hour in the forecast horizon, and corresponding irradiance observations from array B is indicated, and their corresponding plots are shown. It can be observed that downward shortwave radiation flux (DSWRF\_SFC), air temperature (TMP\_SFC), height at planetary boundary layer (HGT\_TOA) and total cloud cover (TCC\_EATM) have a mutual information score greater than 0.1, indicating a higher dependency on the irradiance observations. 
+
+\begin{figure}[htbp]
+    \begin{center}
+    	\includegraphics[width=\textwidth]{chapter3/fig_mi_ugabpoa1irr.png}
+    	\caption[Correlations between NAM weather variables and irradiance observations from fixed-axis array.]{Correlations between different NAM weather variables and irradiance observations from fixed-axis array (array B) in increasing order (left-right, top-bottom) of mutual information between a feature projection of each of the weather variables and corresponding irradiance observations from the solar array - visible relationships can be easily identified in the last three weather variables.}
+    \label{fig:fig_mi_forecast_target_hr1}
+    \end{center}
+\end{figure}
+
+\par Downward shortwave radiation flux is the total amount of shortwave radiation that reaches the earth's surface, and is a major component of the total solar radiation on the surface of the earth. Thus, it is the most direct parameter in the estimation solar irradiance, and the high mutual importance score between this weather parameter and the irradiance observations from the solar farm can be justified. By absorbing the incoming solar radiation, the Earth warms up, and its temperature rises. As long as the amount of incoming radiative flux is greater than the outgoing radiative flux, the Earth will continue to warm. Thus, the air temperature at the surface is essential in estimating the amount of heat absorbed at that particular location, which in turn reveals information about the amount of solar radiation absorbed by the thermopiles in the pyranometers. 
+
+\par The influence of clouds on solar irradiance is significant. In the absence of visible clouds, aerosols, precipitable water and other atmospheric conditions affect the transmission of solar radiation through atmosphere. In cloudy conditions though, the clouds absorb a significant amount of the shortwave radiation, making parameters like total cloud cover, which is the fraction of the sky covered by visible clouds essential. The planetary boundary layer (PBL) is the lowest part of the atmosphere which is directly influenced by its contact with the planetary surface. The structure of turbulence within this layer is mainly governed by the PBL height, which is higher during the day, and lower and more stable during nighttime \cite{feature_selection_pbl1}. PBL height characterizes the planetary boundary layer in a fairly integrated manner and affects the weather parameters such as cloud cover and heat flux \cite{feature_selection_pbl2}. This makes PBL height an important parameter in predicting solar irradiance.
+
+\par For the machine learning models to be able to capture and reconstruct the underlying relationship between input-output data pairs effectively, input selection is essential. By removing the redundant and misleading data, input selection often helps in reducing the computational costs and improves the accuracy. Several approaches have been defined in literature for the purpose of input selection, but the most popular technique used for this purpose includes using machine learning models such as the random forests which provide in-built feature selection.
+
+\par Random forests perform a built-in feature selection, because the tree-based strategies used by them naturally rank inputs based on how well they improve the purity of the node. They are an ensemble learning technique constructed over a variety of randomized decision trees, each of which is built over a random extraction of features and data observations. The training of these randomized decision trees is done so that the Gini Impurity is decreased, and those features are selected which help decrease this measure \cite{feature_selection_rf}. Thus, random forests help determine the importance of the features in this manner. It was observed that the weather parameters with higher mutual information scores also received high feature importance scores through this technique, thus validating the dependence of the target irradiance observations on this set of parameters.
+
+\par From among the weather parameters, downward shortwave radiation flux (DSWRF\_SFC), synonymous with global horizontal irradiance (GHI) has the maximum dependency on the target irradiance observations from all the three arrays. In \cite{thesis_zach}, Jones et al. used all 36 feature projections at one-hour temporal resolution for each of the environmental attributes, as the predictor variables for machine learning models. In this work, a forecast horizon of 24 hours was selected, and the relationship between the feature projections in this forecast horizon and the irradiance observations corresponding to the target hours in this forecast horizon was studied. 
+
+\begin{figure}[htb]
+    \begin{center}
+    	\includegraphics[width=0.65\textwidth]{chapter3/fig_mi_forecast_target.png}
+    	\caption[Mutual information between Downward Shortwave Radiation Flux feature projection forecasts and irradiance observations for target hours in the forecast horizon from Solar Array B]{Mutual information between feature projection forecasts of Downward Shortwave Radiation Flux (DSWRF\_SFC) and irradiance observations for target hours in the forecast horizon on Solar Array B.}
+    	\label{fig:fig_mi_forecast_target}
+    \end{center}
+\end{figure}
+
+\par As shown in Fig.~\ref{fig:fig_mi_forecast_target}, it can be observed that the irradiance observations from solar array B for a particular target hour are dependent on only a certain number of feature projections in the forecast horizon. Thus, for each target hour, feature projections from 6 hours ahead, and 6 hours prior were used as predictors. For the first six target hours in the forecast horizon which do not necessarily have six prior feature projections, desired number of feature projections were selected from the end. Similarly, for the last six target hours in the forecast horizon which do not necessarily have six subsequent feature projections, desired number of feature projections were selected from the beginning of the forecast horizon. Such a feature projection selection is justified because it is more likely for the same reference time in two consecutive days to have similar weather conditions. Thus, following this input selections scheme, the NAM model data contributes 13 feature projections for each of the four environmental attributes described earlier, eight temporal features (four for the reference time of the observation, four for the target hour offset from the reference time) towards the post-processing of solar irradiance from each of the solar arrays A, B and E using machine learning models.
+
+\subchapter{Experiment Setup}
+\par In this chapter, two series of experiments are performed towards predicting solar irradiance on the dual-axis tracking solar array (array A), fixed-axis solar array (array B) and single-axis tracking solar array (array E). In the first series of experiments, solar irradiance forecasting using Numerical Weather Prediction (NWP) models such as North America Mesoscale (NAM) Forecast Model is investigated, replicating the modeling methodology employed by Jones et al. in \cite{thesis_zach}. This is compared with the processed NAM dataset obtained by incorporating the input selection scheme described in 3.2.2. 
+
+\par Jones et al used a 24-hour \textit{persistence model} to set a baseline for the more sophisticated machine learning models. In general, persistence models are based on the assumption that conditions remain unchanged between the current time and a future time. The 24-hour persistence models would measure the solar irradiance at a particular time $t$ based on the irradiance value measured at $t-24$. Making use of such a trivial model as a baseline helps in understanding and preparing the data better, by providing a reference for improving the model. Similar 24-hour \textit{persistence models} were used as a baseline in this work as well.
+
+\par Several machine learning algorithms such as \textit{Least-Squares Linear Regression} (LSLR), \textit{k-Nearest Neighbors} (KNN), \textit{Support Vector Regression} (SVR), \textit{Decision Trees} (DT), \textit{Random Forests} (RF) and \textit{Extreme Gradient Boosted Trees} (XGBT) were used for the purpose of forecasting. Python-based machine learning softwares \textit{scikit-learn} and \textit{xgboost}\footnote{\url{https://github.com/dmlc/xgboost}} were used for the implementations of these machine learning algorithms. Randomized cross-validated grid search was employed to identify the optimal set of hyperparameters, ranges for each of which were selected around the default values set for them in the \textit{scikit-learn} implementations.
+
+\par Weather variable inputs from the NAM data were used as predictors for the machine learning models, and the irradiance observations from the solar arrays A, B and E were used as the target variables. Each of the weather variables projects the features 36 hours into the future. As a part of the input-selection scheme, select feature projections were picked from the important weather variables, depending on the target hour in the forecast horizon. Prediction of target irradiance was done for a day-ahead forecast horizon, i.e, solar irradiance on each of the arrays was predicted 24 hours into the future, at a one hour temporal resolution. Models were trained on data collected during 2017, and evaluated against data collected during 2018. In the first series of experiments, the performance of the models, with and without employing the input-selection methodology was compared.
+
+\par Jones et al. reported evaluation metrics such as \textit{mean absolute error} ($MAE$) and \textit{coefficient of determination} ($R^2$). $MAE$ is a more natural and unambiguous measure of average error, and is extremely useful in evaluating average-model performance. An evaluation metric such as $R^2$ helps in providing a reference point for comparing the model results with results from other literature. Owing to these advantages, in this thesis, both the evaluation metrics were retained to facilitate a consistent comparison.
+
+\par Geographic expansion of forecast coverage by including additional weather forecasts specific to areas surrounding the target location is considered to improve the solar irradiance forecasting capabilities. In the second series of experiments, the effect of such a spatial expansion is investigated, by including the feature projections of weather variables from a grid of cells around the NAM data grid representing Athens, as predictors to the machine learning models. Jones et al. had explored a geographic expansion from the $1 x 1$ grid to other grid shapes such as $3 x 3$, $5 x 5$ and $7 x 7$ for the \textit{K-Nearest Neighbors} and \textit{Random Forests} algorithms. In this work, geographic expansion till $5 x 5$ grid shape was explored for both of these machine learning models. Additionally, geographic expansion for \textit{Extreme Gradient Boosted Trees} was examined as well. Each of these methodologies are further explained in finer detail.
+
+\subsubchapter{Irradiance Forecasting with NAM Weather Forecast Model}
+\par In \cite{thesis_zach}, Jones et al. used a variety of machine learning techniques to determine their usefulness in predicting solar irradiance. In the manner described in Section 3.2.1, North America Mesoscale (NAM) weather forecast data and solar irradiance data from the solar farm at the University of Georgia were collected for the years 2017 and 2018. For a forecast horizon of 24 hours, planar surface features from the North America Mesoscale (NAM) weather forecast model such as air pressure, geopotential height, height at planetary boundary layer, air temperature, u-component of wind speed, v-component of wind speed, downward short-wave radiation flux and downward long-wave radiation flux were used. 
+
+\par Jones et al. noted that the spatial expansion of the forecast coverage of NAM weather data had diminishing returns after a point, and that considering $3 x 3$ grid of NAM data cells around Athens was optimal. The first 36 feature projections of the weather variables for the NAM data grid corresponding to the target location, as well as those for the nine NAM data grids around it, which are at a one-hour temporal resolution were included as the predictor variables for the machine learning models. Additionally, temporal features were included as well. Each of the machine learning models were trained on the data collected during 2017 and evaluated against data collected during 2018.
+
+\par For any machine learning model, finding the ideal set of parameters which defines the model architecture, referred to as hyperparameters is paramount. Jones et al performed hyperparameter tuning by carrying out a cross-validated grid search over a parameter space defined around the default hyperparameters given in the \textit{scikit-learn} documentation. The results generated by using these hyperparameters were replicated for the grid representing the NAM forecasts. Furthermore, these were compared with the predictions generated using the processed NAM dataset, generated by employing the input selection scheme described in 3.2.2.
+
+\par As mentioned in 3.2.2, it was determined that weather variables such as air temperature, total cloud cover, height at planetary boundary layer and downward short-wave radiation flux affected the solar irradiance predictions more, from among the surface level planar features considered by Jones et al. For each of these weather variables, depending on the target hour offset in the forecast horizon, select feature projections were picked so as to be included in the NAM dataset. This was done by selecting 13 from among the 36 feature projections such that, six followed the reference time of the target hour offset, six preceded the reference time of the target hour offset, and one corresponded to the reference time of the target hour offset. A new set of hyperparameters were chosen for the machine learning models trained on this dataset by performing a randomized cross-validated grid search. 
+They were trained on data collected during 2017 as well, and evaluated against data collected during 2018. The results obtained by both the methodologies, with and without input selection, were compared and analyzed.
+
+\subsubchapter{Geographic Expansion of Forecast Coverage}
+\par Lorenz et al. \cite{expansion_lorenz} found that expanding the forecast region to approximately $100 km$ x $100 km$ resulted in an improvement in day-ahead solar forecasting. They performed a spatial averaging across the region, by taking  an arithmetic mean of the weather variables from the surrounding weather data grid cells. In contrast, Sanders et. al. \cite{publication_sanders} and Jones et al. \cite{thesis_zach} performed a distance-dependent weighted averaging, by including the weather variables from the surrounding weather data grid cells as predictors to the machine learning models.
+
+\begin{figure}[ht]
+    \begin{center}
+    	\includegraphics[width=0.65\textwidth]{chapter3/fig_geoshapes.png}
+    	\caption[Geographic expansion of forecast coverage around Athens NAM model data grid]{Geographic expansion of forecast coverage with 1 x 1 Geo Shape representing Athens NAM model data grid, 3 x 3 Geo Shape and 5 x 5 Geo Shape representing grid of cells around Athens.}
+    	\label{fig:fig_geoshapes}
+    \end{center}
+\end{figure}
+
+\par Jones et al. trained \textit{k-nearest neighbors} and \textit{random forest} algorithms for $3$ x $3$, $5$ x $5$ and $7$ x $7$ \textit{geo shapes}, each reflecting a spatial expansion up to $36km$ x $36km$, $60km$ x $60km$ and $84km$ x $84km$ respectively. As shown in Figure~\ref{fig:fig_geoshapes}, each of the \textit{geo shapes} represent 8, 15 and 48 NAM weather forecast data grid cells centered around Athens, Georgia. They realized that including the weather forecasts from the surrounding data grid cells resulted in an improved day-ahead solar forecasting, though it was observed that the improvement diminished as the \textit{geo shape} grew larger. Additionally, Jones et al. also noted that the $3$ x $3$ \textit{geo shape}, equivalent to a $36km$ x $36km$ area was optimal. In this work, a similar geographic expansion of forecast coverage was carried out with $3$ x $3$ and $5$ x $5$ \textit{geo shapes}, resulting in a spatial expansion upto $60km$ x $60km$. The dataset set up using the input selection scheme described in 3.2.2, was used to determine the affect of geographic expansion.
+
+\subchapter{Results and Discussion}
+\subsubsection*{Assessment of Model Performance with and without Input Selection Scheme}
+\par In this work, an input selection scheme as described in 3.2.2 was incorporated towards selecting features for the machine learning models. The performance of the machine learning models using both the methodologies, i.e. with and without the input selection scheme were compared for dual-axis tracking solar array (array A), fixed-axis solar array (array B) and single-axis tracking solar array (array E). As a part of this scheme, the key differences between Jones' dataset and the one used in this work, towards training with the machine learning models are as follows:
+\begin{itemize}
+    \itemsep0em
+    \item Jones et al hadn't considered the \textit{total cloud cover} weather variable in the NAM weather dataset
+    \item from among the other surface weather variables used, only air temperature, height at planetary boundary layer and downward shortwave radiation flux were considered
+    \item instead of the 36 feature projections for each of the weather variables, select feature projections depending on the target hour offset were chosen
+    \item $1 x 1$ geographical grid size was selected instead of $3 x 3$ (which Jones et al. had found to be optimal)
+    \item temporal features were modified to incorporate cyclicity of the reference time in a particular day or in a particular year
+\end{itemize}
+
+\par Based on these differences, the two NAM datasets were used as input to different machine learning models. Separate machine learning models were trained for each of the target hour offsets between 1 and 24, and their results were analyzed in two schemes: mean of the evaluations for each forecast hour in the forecast horizon ($Overall$); mean of the evaluations for sets of six forecast hours in the forecast horizon, i.e, $1 - 6$, $7 - 12$, $13 - 18$ and $19 - 24$. Such an analysis helped in realizing the performance of the models specifically for different periods in the day. The performance was noted for each of the machine learning models for the solar arrays A, B and E in Table~\ref{Tab:fs_array_a}, Table~\ref{Tab:fs_array_b} and Table~\ref{Tab:fs_array_e} respectively.
+
+\begin{table}[h]
+\begin{center}
+    \caption{Evaluating performance of machine learning algorithms trained against solar array A using NAM Forecast Model data, with and without input selection.}
+    \vspace{0.2cm}
+    \label{Tab:fs_array_a}
+    \begin{tabular}{@{}p{5.3em}ccccccccc@{}}
+    \toprule
+    & \textbf{Metric} & \textbf{Horizon} & \textbf{PER} & \textbf{LSLR} & \textbf{SVR} & \textbf{KNN} & \textbf{DT} & \textbf{RF} & \textbf{XGBT} \\ \cmidrule(l){1-10} 
+    \multirow{10}{5em}{Without Input Selection} & \multirow{5}{*}{$MAE$} & $1 - 6$ & 209.6 & 231.00 & 88.38 & 98.73 & 98.34 & 74.38 & 73.03 \\
+                                              &                   & $7 - 12$ & 209.2 & 231.06 & 89.83 & 101.77 & 105.17 & 77.14 & 76.97 \\
+                                              &                   & $13 - 18$ & 209.1 & 232.15 & 89.08 & 106.56 & 98.31 & 74.43 & 75.64 \\
+                                              &                   & $19 - 24$ & 208.9 & 243.04 & 89.88 & 104.15 & 98.19 & 75.02 & 76.69 \\
+                                              &                   & $Overall$ & 209.2 & 234.31 & 89.29 & 102.80 & 100.00 & \textbf{75.24} & 75.58 \\ \cmidrule(lr){2-10}
+                                              & \multirow{5}{*}{$R^2$} & $1 - 6$ & -0.494 & 0.31 & 0.85 & 0.78 & 0.71 & 0.86 & 0.86 \\
+                                              &                   & $7 - 12$ & -0.493 & 0.29 & 0.84 & 0.78 & 0.68 & 0.85 & 0.84 \\
+                                              &                   & $13 - 18$ & -0.493 & 0.31 & 0.84 & 0.77 & 0.71 & 0.86 & 0.85 \\
+                                              &                   & $19 - 24$ & -0.493 & 0.25 & 0.84 & 0.77 & 0.71 & 0.85 & 0.85 \\
+                                              &                   & $Overall$ & -0.493 & 0.29 & 0.84 & 0.77 & 0.70 & 0.85 & 0.85 \\ 
+    \midrule
+    \multirow{3}{5em}{Relative Imp. in $MAE$ (\%)} & & & & & & & & & \\
+    & & $Overall$ & --- & 52.17 & 17.76 & 28.97 & 10.91 & 3.47 & 1.02 \\ 
+    & & & & & & & & & \\
+    \midrule
+    \multirow{10}{5em}{Input Selection}
+                                              & \multirow{5}{*}{$MAE$} & $1 - 6$ & 209.6 & 107.08 & 70.63 & 68.54 & 85.74 & 70.21 & 71.65 \\
+                                              &                   & $6 - 12$ & 209.2 & 114.52 & 73.82 & 72.35 & 90.57 & 72.92 & 74.6 \\
+                                              &                   & $13 - 18$ & 209.1 & 115.03 & 73.34 & 73.12 & 87.65 & 72.6 & 75.77 \\
+                                              &                   & $19 - 24$ & 208.9 & 111.68 & 75.93 & 78.04 & 92.39 & 74.78 & 77.23 \\
+                                              &                   & $Overall$ & 209.2 & 112.08 & 73.43 & 73.02 & 89.09 & \textbf{72.63} & 74.81 \\ \cmidrule(lr){2-10}
+                                              & \multirow{5}{*}{$R^2$} & $1 - 6$ & -0.494 & 0.84 & 0.88 & 0.88 & 0.78 & 0.88 & 0.87 \\
+                                              &                   & $7 - 12$ & -0.493 & 0.83 & 0.86 & 0.86 & 0.76 & 0.87 & 0.86 \\
+                                              &                   & $13 - 18$ & -0.493 & 0.82 & 0.86 & 0.86 & 0.77 & 0.87 & 0.86 \\
+                                              &                   & $19 - 24$ & -0.493 & 0.82 & 0.85 & 0.85 & 0.74 & 0.86 & 0.85 \\
+                                              &                   & $Overall$ & -0.493 & 0.83 & 0.86 & 0.86 & 0.76 & 0.87 & 0.86 \\ 
+    \bottomrule
+    \end{tabular}
+\end{center}
+\end{table}
+
+\par For the dual-axis tracking solar array, i.e. array A, all the machine learning models performed exceedingly well as compared to the baseline 24-hour \textit{persistence} models. In particular, using the input selection scheme helped in improving the $MAE$ of simple \textit{linear regression} by 52.17\%. There was a considerable improvement in the performance of \textit{support vector regression} and \textit{k-nearest neighbors} algorithas well, with the $MAE$ reducing by 17.76\% and 28.97\% respectively. Each of these algorithms are affected greatly by higher dimensionality and the quality of data, and by weeding out weather variables and their feature projections which have a lesser influence on the target irradiance, the improvement in performance of these models can be justified.   
+
+\par Ensemble tree-based methods have the intrinsic ability to calculate feature importance, and account for the possible correlations between the variables. Thus in general, they perform better than the linear regression methods. For the dual-axis tracking array, random forests had the best performance with an $MAE$ of 72.63 $W/m^2$, and extreme gradient boosted trees recorded an overall $MAE$ of 74.81 $W/m^2$. The improvement over the performance of the same algorithms without incorporating the input selection scheme was 3.47\% and 1.02\% respectively.
+
+\par While the random forests performed the best, considerable improvements in performance as a result of incorporating the input selection scheme were seen in simple \textit{linear regression}, \textit{support vector regression} and \textit{k-nearest neighbors} algorithms. Overall, there was an average improvement in $MAE$ by 19.05\% across the machine learning models, with \textit{random forests} having the best $MAE$ with 72.63 $W/m^2$ for the dual-axis tracking solar array.
+
+\begin{table}[h]
+\begin{center}
+    \caption{Evaluating performance of machine learning algorithms trained against solar array B using NAM Forecast Model data, with and without input selection.}
+    \vspace{0.2cm}
+    \label{Tab:fs_array_b}
+    \begin{tabular}{@{}p{5.3em}ccccccccc@{}}
+    \toprule
+    & \textbf{Metric} & \textbf{Horizon} & \textbf{PER} & \textbf{LSLR} & \textbf{SVR} & \textbf{KNN} & \textbf{DT} & \textbf{RF} & \textbf{XGBT} \\ \cmidrule(l){1-10} 
+    \multirow{10}{5em}{Without Input Selection} & \multirow{5}{*}{$MAE$} & $1 - 6$ & 209.6 & 151.79 & 55.018 & 61.10 & 62.81 & 47.09 & 47.21 \\
+                                              &                   & $7 - 12$ & 209.2 & 147.12 & 56.65 & 63.78 & 62.05 & 48.32 & 49.56 \\
+                                              &                   & $13 - 18$ & 209.1 & 151.09 & 55.64 & 68.70 & 64.64 & 48.19 & 49.22 \\
+                                              &                   & $19 - 24$ & 208.9 & 159.29 & 56.11 & 66.53 & 62.28 & 47.65 & 49.44 \\
+                                              &                   & $Overall$ & 209.2 & 152.32 & 55.85 & 65.03 & 62.95 & \textbf{47.81} & 48.86 \\ \cmidrule(lr){2-10}
+                                              & \multirow{5}{*}{$R^2$} & $1 - 6$ & -0.494 & 0.54 & 0.89 & 0.85 & 0.80 & 0.90 & 0.89 \\
+                                              &                   & $7 - 12$ & -0.493 & 0.55 & 0.89 & 0.85 & 0.80 & 0.89 & 0.88 \\
+                                              &                   & $13 - 18$ & -0.493 & 0.55 & 0.89 & 0.83 & 0.78 & 0.89 & 0.88 \\
+                                              &                   & $19 - 24$ & -0.493 & 0.50 & 0.89 & 0.83 & 0.80 & 0.89 & 0.88 \\
+                                              &                   & $Overall$ & -0.493 & 0.54 & 0.89 & 0.84 & 0.80 & 0.89 & 0.88 \\ 
+    \midrule
+    \multirow{3}{5em}{Relative Imp. in $MAE$ (\%)} & & & & & & & & & \\
+    & & $Overall$ & --- & 51.92 & 16.47 & 28.42 & 10.90 & 6.00 & 4.36 \\ 
+    & & & & & & & & & \\ 
+    \midrule
+    \multirow{10}{5em}{Input Selection}
+                                              & \multirow{5}{*}{$MAE$} & $1 - 6$ & 209.6 & 69.81 & 44.26 & 42.77 & 55.30 & 42.94 & 44.66 \\
+                                              &                   & $6 - 12$ & 209.2 & 74.74 & 47.19 & 46.72 & 55.96 & 45.16 & 46.77 \\
+                                              &                   & $13 - 18$ & 209.1 & 79.63 & 47.02 & 47.02 & 56.65 & 45.14 & 46.79 \\
+                                              &                   & $19 - 24$ & 208.9 & 68.75 & 48.13 & 49.67 & 56.48 & 46.51 & 48.69 \\
+                                              &                   & $Overall$ & 209.2 & 73.24 & 46.65 & 46.55 & 56.09 & \textbf{44.94} & 46.73 \\ \cmidrule(lr){2-10}
+                                              & \multirow{5}{*}{$R^2$} & $1 - 6$ & -0.494 & 0.89 & 0.91 & 0.92 & 0.84 & 0.92 & 0.91 \\
+                                              &                   & $7 - 12$ & -0.493 & 0.88 & 0.90 & 0.90 & 0.84 & 0.91 & 0.90 \\
+                                              &                   & $13 - 18$ & -0.493 & 0.87 & 0.90 & 0.90 & 0.83 & 0.91 & 0.90 \\
+                                              &                   & $19 - 24$ & -0.493 & 0.88 & 0.89 & 0.89 & 0.83 & 0.90 & 0.89 \\
+                                              &                   & $Overall$ & -0.493 & 0.88 & 0.90 & 0.90 & 0.84 & 0.91 & 0.90 \\ 
+    \bottomrule
+    \end{tabular}
+\end{center}
+\end{table}
+
+
+\par In general, it's expected that the performance of the models degrades as the forecast horizon increases. There was no such strict pattern observed in the methodology employed by Jones et al, with sometimes, even the $7 - 12$ hour forecast horizon performing worse than $13 - 18$ and $19 - 24$ hours forecast horizons. However, this trend was realized in the results obtained by incorporating the input selection scheme. By and large, most of the models displayed a trend where the error increased (performance degraded) with the target hour in the forecast horizon.
+
+\par Similar trends were also observed in the performance of the machine learning models for irradiance predictions on the fixed-axis solar array (array B). The \textit{random forests} performed the best with a $MAE$ of 44.94 $W/m^2$. This model achieved an improvement of 6\% due to the incorporation of the input-selection scheme. In contrast, \textit{random forests}, which were also the best-performing model without incorporating the input-selection methodology (as followed by Jones et al.), achieved a $MAE$ of 47.81 $W/m^2$. In all, the input-selection scheme achieved an average improvement of 19.68\% in $MAE$ across all the machine learning models.
+
+\begin{table}[h]
+\begin{center}
+    \label{Tab:fs_array_e}
+    \caption{Evaluating performance of machine learning algorithms trained against solar array E using NAM Forecast Model data, with and without input selection.}
+    \vspace{0.2cm}
+    \begin{tabular}{@{}p{5.3em}ccccccccc@{}}
+    \toprule
+    & \textbf{Metric} & \textbf{Horizon} & \textbf{PER} & \textbf{LSLR} & \textbf{SVR} & \textbf{KNN} & \textbf{DT} & \textbf{RF} & \textbf{XGBT} \\ \cmidrule(l){1-10} 
+    \multirow{10}{5em}{Without Input Selection} & \multirow{5}{*}{$MAE$} & $1 - 6$ & 209.6 & 174.61 & 67.52 & 83.58 & 77.53 & 56.81 & 57.67 \\
+                                              &                   & $7 - 12$ & 209.2 & 176.21 & 70.13 & 86.63 & 82.25 & 60.32 & 61.40 \\
+                                              &                   & $13 - 18$ & 209.1 & 176.39 & 68.79 & 91.08 & 81.01 & 58.54 & 60.15 \\
+                                              &                   & $19 - 24$ & 208.9 & 182.16 & 68.70 & 87.62 & 82.42 & 58.42 & 60.85 \\
+                                              &                   & $Overall$ & 209.2 & 177.34 & 68.79 & 87.23 & 80.80 & \textbf{58.52} & 60.02 \\ \cmidrule(lr){2-10}
+                                              & \multirow{5}{*}{$R^2$} & $1 - 6$ & -0.494 & 0.48 & 0.88 & 0.79 & 0.77 & 0.89 & 0.88 \\
+                                              &                   & $7 - 12$ & -0.493 & 0.46 & 0.87 & 0.79 & 0.75 & 0.75 & 0.87 \\
+                                              &                   & $13 - 18$ & -0.493 & 0.48 & 0.87 & 0.77 & 0.75 & 0.88 & 0.87 \\
+                                              &                   & $19 - 24$ & -0.493 & 0.45 & 0.87 & 0.78 & 0.74 & 0.88 & 0.87 \\
+                                              &                   & $Overall$ & -0.493 & 0.47 & 0.87 & 0.78 & 0.75 & 0.88 & 0.87 \\ 
+    \midrule
+    \multirow{3}{5em}{Relative Imp. in $MAE$ (\%)} & & & & & & & & & \\
+    & & $Overall$ & --- & 48.39 & 5.9 & 24.65 & 2.08 & -8.68 & -8.46 \\ 
+    & & & & & & & & & \\ 
+    \midrule
+    \multirow{10}{5em}{Input Selection}
+                                              & \multirow{5}{*}{$MAE$} & $1 - 6$ & 209.6 & 87.52 & 62.29 & 61.71 & 75.62 & 61.37 & 62.93 \\
+                                              &                   & $6 - 12$ & 209.2 & 95.30 & 65.77 & 65.98 & 81.80 & 64.09 & 65.55 \\
+                                              &                   & $13 - 18$ & 209.1 & 93.47 & 64.29 & 65.75 & 76.77 & 63.50 & 65.73 \\
+                                              &                   & $19 - 24$ & 208.9 & 89.84 & 66.57 & 69.47 & 82.28 & 65.44 & 66.18 \\
+                                              &                   & $Overall$ & 209.2 & 91.53 & 64.73 & 65.73 & 79.12 & \textbf{63.60} & 65.10 \\ \cmidrule(lr){2-10}
+                                              & \multirow{5}{*}{$R^2$} & $1 - 6$ & -0.494 & 0.86 & 0.88 & 0.88 & 0.80 & 0.89 & 0.88 \\
+                                              &                   & $7 - 12$ & -0.493 & 0.85 & 0.87 & 0.86 & 0.77 & 0.87 & 0.87 \\
+                                              &                   & $13 - 18$ & -0.493 & 0.85 & 0.87 & 0.86 & 0.79 & 0.88 & 0.87 \\
+                                              &                   & $19 - 24$ & -0.493 & 0.85 & 0.86 & 0.86 & 0.77 & 0.87 & 0.87 \\
+                                              &                   & $Overall$ & -0.493 & 0.85 & 0.87 & 0.86 & 0.78 & 0.88 & 0.87 \\ 
+    \bottomrule
+    \end{tabular}
+\end{center}
+\end{table}
+
+\par In the present investigation of incorporating the input-selection scheme in generating a processed NAM dataset, the most interesting results were seen with the single-axis tracking solar array predictions. For the simple \textit{linear regression} and \textit{k-nearest neighbors} algorithms, the trends followed the predictions for the other solar arrays reported so far, with a reduction in $MAE$ by 48.39\% and 24.65\% respectively. For the predictions with the \textit{support vector regression}, a reduction in $MAE$ by 5.9\% was observed. However, this relative improvement in performance was less in magnitude as compared to those observed for dual-axis tracking array predictions and fixed-axis array predictions. In addition, using the tree-based ensemble methods such as \textit{random forests} and \textit{extreme gradient boosted trees}, a degradation in performance was recorded, with the $MAE$ increasing by 8.68\% and 8.46\%. Though \textit{random forests} still performed the best with a $MAE$ of 63.6 $W/m^2$, this performance paled in comparison to that of the \textit{random forests} without incorporating the input-selection scheme, wherein, a $MAE$ of 58.52 $W/m^2$ was obtained.
+
+\subsubsection*{Evaluating Affect of Geographic Expansion of Forecast Coverage}
+\par Better performing algorithms in 3.3.1 such as \textit{k-nearest neighbors}, \textit{random forests} and \textit{extreme gradient boosted trees} were retrained on dual-axis tracking (array A), fixed-axis (array B) and single-axis tracking (array E) solar arrays and corresponding weather forecast data for the year 2017, and evaluated against data belonging to the year 2018. The performance of these models for each of the \textit{geo shapes} $1$ x $1$, $3$ x $3$ and $5$ x $5$ was compared and analyzed.
+
+\par Using the \textit{k-nearest neighbors} algorithm to predict the day-ahead solar irradiance on dual-axis tracking solar array, it was observed that the geographic expansion had a slightly detrimental effect on the performance. Expanding to $3$ x $3$ \textit{geo shape} resulted in increasing the $MAE$ by 1.59\%, and increasing the weather forecast coverage to $5$ x $5$ \textit{geo shape} resulted in increasing the $MAE$ by 0.44\%. For these models, the $1$ x $1$ performed best with a $MAE$ of 73.01 $W/m^2$.
+
+\begin{table}[h]
+\begin{center}
+    \caption{Evaluating affect of geographic expansion of forecast coverage for dual-axis tracking array (array A).}
+    \begin{tabular}{l c c c c c c c c c c}
+        \toprule
+        \multirow{2}{*}{\textbf{Metric}} & \multirow{2}{*}{\textbf{Horizon}} & \multicolumn{3}{c}{\textbf{KNN}} & \multicolumn{3}{c}{\textbf{RF}} & \multicolumn{3}{c}{\textbf{XGBT}}\\
+        \cmidrule{3-11}
+         &  & 1x1 & 3x3 & 5x5 & 1x1 & 3x3 & 5x5 & 1x1 & 3x3 & 5x5 \\
+        \midrule
+        \multirow{5}{*}{$MAE$} & $1 - 6$ & 68.61 & 69.68 & 69.02 & 68.53 & 67.90 & 66.69 & 71.04 & 69.23 & 85.32 \\
+        & $7 - 12$ & 72.52 & 73.72 & 72.77 & 72.40 & 71.40 & 69.38 & 73.51 & 72.44 & 87.16 \\
+        & $13 - 18$ & 72.86 & 74.27 & 73.06 & 70.82 & 69.85 & 68.39 & 73.69 & 71.91 & 87.47 \\
+        & $19 - 24$ & 78.05 & 78.99 & 78.47 & 74.99 & 74.46 & 73.06 & 77.92 & 76.02 & 90.02 \\
+        & $Overall$ & \textbf{73.01} & 74.17 & 73.33 & 71.68 & 70.90 & \textbf{69.38} & 74.04 & \textbf{72.40} & 87.49 \\
+        \midrule
+        \multirow{3}{5em}{Relative Imp. in $MAE$ (\%)} & & & & & & & & & & \\ 
+        & $Overall$ & --- & -1.59 & -0.44 & --- & 1.09 & 3.21 & --- & 2.22 & -18.17 \\
+        & & & & & & & & & & \\
+        \midrule
+        \multirow{5}{*}{$R^2$} & $1 - 6$ & 0.88 & 0.87 & 0.87 & 0.88 & 0.88 & 0.89 & 0.87 & 0.88 & 0.84 \\
+        & $7 - 12$ & 0.86 & 0.85 & 0.86 & 0.87 & 0.87 & 0.88 & 0.86 & 0.86 & 0.84 \\
+        & $13 - 18$ & 0.86 & 0.85 & 0.85 & 0.87 & 0.87 & 0.88 & 0.86 & 0.87 & 0.83 \\
+        & $19 - 24$ & 0.85 & 0.84 & 0.84 & 0.86 & 0.86 & 0.87 & 0.84 & 0.85 & 0.83 \\
+        & $Overall$ & 0.86 & 0.85 & 0.86 & 0.87 & 0.87 & 0.88 & 0.86 & 0.87 & 0.83 \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+\end{table}
+
+\par However for the machine learning models trained on irradiance observations from dual-axis tracking array and the weather forecast data using \textit{random forests} algorithm, it was observed that the performance improved while expanding to $3$ x $3$ and $5$ x $5$ \textit{geo shapes} by 1.09\% and 3.21\% respectively, with respect to the performance of the model for the $1$ x $1$ \textit{geo shape}. This led to the $MAE$ improving to 70.90 $W/m^2$ and 69.38 $W/m^2$ for each of the \textit{geo shapes}. This improvement in performance can be attributed to the better attribute selection capabilities of the decision tree based ensemble algorithms. 
+
+\par An improvement in performance of this nature was expected for another decision tree based ensemble algorithm, the \textit{extreme gradient boosted trees} as well. However in this case, while expanding to $3$ x $3$ \textit{geo shape} improved the performance on the dual-axis tracking solar arrays by 2.22\%, resulting in an $MAE$ of 72.40 $W/m^2$, expanding to $5$ x $5$ \textit{geo shape} had an extremely detrimental performance on the models, subsequently increasing the $MAE$ by 18.17\% to 87.49 $W/m^2$. The best performance for the \textit{extreme gradient boosted trees} models trained on the irradiance observations from the dual-axis tacking solar arrays was recorded for the $3$ x $3$ \textit{geo shape}, with an $MAE$ of 72.40 $W/m^2$. 
+
+\par The grouping of the decision trees in \textit{extreme gradient boosted trees} are built upon the underlying principle of 'boosting'. In this technique, weak decision trees with low variance and high bias are grouped with the objective of reducing the bias towards minimizing the error. In general, high bias can be handled by increasing the number of features. While expanding to $5$ x $5$ \textit{geo shape} should have handled the high bias and resulted in an improvement in performance, the failure to do so can be attributed to an insufficient number of decision trees being used in the ensemble technique.
+
+\begin{table}[h]
+\begin{center}
+    \caption{Evaluating affect of geographic expansion of forecast coverage for fixed-axis tracking array (array B).}
+    \begin{tabular}{l c c c c c c c c c c}
+        \toprule
+        \multirow{2}{*}{\textbf{Metric}} & \multirow{2}{*}{\textbf{Horizon}} & \multicolumn{3}{c}{\textbf{KNN}} & \multicolumn{3}{c}{\textbf{RF}} & \multicolumn{3}{c}{\textbf{XGBT}}\\
+        \cmidrule{3-11}
+         &  & 1x1 & 3x3 & 5x5 & 1x1 & 3x3 & 5x5 & 1x1 & 3x3 & 5x5 \\
+        \midrule
+        \multirow{5}{*}{$MAE$} & $1 - 6$ & 42.62 & 44.10 & 44.06 & 42.33 & 41.77 & 41.12 & 44.46 & 43.42 & 56.95 \\
+        & $7 - 12$ & 46.64 & 48.43 & 48.03 & 45.53 & 44.94 & 43.82 & 46.71 & 45.84 & 58.85 \\
+        & $13 - 18$ & 46.82 & 48.77 & 48.26 & 44.80 & 44.13 & 43.73 & 46.56 & 45.56 & 59.97 \\
+        & $19 - 24$ & 49.59 & 51.10 & 50.85 & 46.82 & 46.20 & 45.80 & 48.63 & 48.32 & 60.49 \\
+        & $Overall$ & \textbf{46.41} & 48.10 & 47.80 & 44.87 & 44.26 & \textbf{43.62} & 46.59 & \textbf{45.78} & 59.07 \\
+        \midrule
+        \multirow{3}{5em}{Relative Imp. in $MAE$ (\%)} & & & & & & & & & & \\ 
+        & $Overall$ & --- & -3.64 & -3.00 & --- & 1.36 & 2.79 & --- & 1.74 & -26.79 \\
+        & & & & & & & & & & \\
+        \midrule
+        \multirow{5}{*}{$R^2$} & $1 - 6$ & 0.92 & 0.91 & 0.92 & 0.92 & 0.92 & 0.93 & 0.91 & 0.92 & 0.88 \\
+        & $7 - 12$ & 0.90 & 0.89 & 0.89 & 0.90 & 0.91 & 0.91 & 0.90 & 0.90 & 0.87 \\
+        & $13 - 18$ & 0.90 & 0.89 & 0.89 & 0.91 & 0.91 & 0.91 & 0.90 & 0.90 & 0.87 \\
+        & $19 - 24$ & 0.89 & 0.89 & 0.89 & 0.90 & 0.90 & 0.91 & 0.89 & 0.89 & 0.86 \\
+        & $Overall$ & 0.90 & 0.90 & 0.90 & 0.91 & 0.91 & 0.91 & 0.90 & 0.90 & 0.87 \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+\end{table}
+
+\par Similar trends were observed in the performance of these machine learning models for irradiance predictions on the fixed-axis (array B) and single-axis tracking (array E) solar arrays as well. Using the \textit{k-nearest neighbors} algorithms, a best $MAE$ of 46.41 $W/m^2$ and 65.69 $W/m^2$ were recorded for array B and E respectively, both for the $1$ x $1$ \textit{geo shape}. Expanding to $5$ x $5$ \textit{geo shape}, and leveraging the weather forecast data to the \textit{random forests} algorithm improved the performance by 2.79\% and 2.3\% resulting in an $MAE$ of 43.62 $W/m^2$ and 61.99 $W/m^2$ for arrays B and E respectively. Using the \textit{extreme gradient boosted trees} algorithm too, similar trends were recorded, with the $3$ x $3$ \textit{geo shape} performing the best from among $1$ x $1$, $3$ x $3$ and $5$ x $5$, resulting in $MAE$ of 45.78 $W/m^2$ and 63.77 $W/m^2$ for each of the arrays B and E. However, it is to be noted that the best performance recorded for array E was with an $MAE$ of 61.99 $W/m^2$ using \textit{random forests} for the $5$ x $5$ \textit{geo shape}. This is still worse than the best performance observed by Jones et al. with a $3$ x $3$ \textit{geo shape} and without incorporating the input-selection scheme, for which an $MAE$ of 58.52 $W/m^2$ was recorded. 
+
+\begin{table}[h]
+\begin{center}
+    \caption{Evaluating affect of geographic expansion of forecast coverage for single-axis tracking array (array E).}
+    \begin{tabular}{l c c c c c c c c c c}
+        \toprule
+        \multirow{2}{*}{\textbf{Metric}} & \multirow{2}{*}{\textbf{Horizon}} & \multicolumn{3}{c}{\textbf{KNN}} & \multicolumn{3}{c}{\textbf{RF}} & \multicolumn{3}{c}{\textbf{XGBT}}\\
+        \cmidrule{3-11}
+         &  & 1x1 & 3x3 & 5x5 & 1x1 & 3x3 & 5x5 & 1x1 & 3x3 & 5x5 \\
+        \midrule
+        \multirow{5}{*}{$MAE$} & $1 - 6$ & 61.68 & 63.41 & 63.00 & 60.83 & 60.55 & 60.15 & 61.32 & 60.96 & 75.44 \\
+        & $7 - 12$ & 65.93 & 67.27 & 67.03 & 64.18 & 63.73 & 62.52  & 65.58 & 64.43 & 77.09 \\
+        & $13 - 18$ & 65.64 & 67.99 & 67.08 & 62.61 & 60.91 & 60.32 & 64.35 & 62.66 & 76.09 \\
+        & $19 - 24$ & 69.53 & 71.07 & 70.83 & 66.19 & 65.82 & 64.97 & 67.30 & 67.01 & 80.16 \\
+        & $Overall$ & \textbf{65.69} & 67.44 & 66.99 & 63.45 & 62.75 & \textbf{61.99} & 64.63 & \textbf{63.77} & 77.20 \\
+        \midrule
+        \multirow{3}{5em}{Relative Imp. in $MAE$ (\%)} & & & & & & & & & & \\ 
+        & $Overall$ & --- & -2.66 & -1.98 & --- & 1.10 & 2.30 & --- & 1.33 & -19.45 \\
+        & & & & & & & & & & \\
+        \midrule
+        \multirow{5}{*}{$R^2$} & $1 - 6$ & 0.88 & 0.88 & 0.88 & 0.89 & 0.89 & 0.89 & 0.88 & 0.89 & 0.85 \\
+        & $7 - 12$ & 0.86 & 0.86 & 0.86 & 0.87 & 0.87 & 0.88 & 0.87 & 0.87 & 0.84 \\
+        & $13 - 18$ & 0.86 & 0.85 & 0.86 & 0.88 & 0.88 & 0.88 & 0.87 & 0.87 & 0.84 \\
+        & $19 - 24$ & 0.86 & 0.85 & 0.85 & 0.87 & 0.87 & 0.87 & 0.86 & 0.86 & 0.83 \\
+        & $Overall$ & 0.86 & 0.86 & 0.86 & 0.88 & 0.88 & 0.88 & 0.87 & 0.87 & 0.84 \\
+        \bottomrule
+    \end{tabular}
+\end{center}
+\end{table}
+
+\subsubsection*{Diurnal and Seasonal Analysis of Performance}
+\par In order to assess the performance of the machine learning models as a result of incorporating the input-selection scheme better, a stratified analysis was carried out on the solar irradiance predictions on the fixed-axis solar array (array B). The predictions for each of the 00h, 06h, 12h and 18h NAM weather forecasts were examined in two schemes: \textit{diurnal} and \textit{seasonal}. In the diurnal analysis of the performance of the models, the mean absolute error ($MAE$) for each of the target hours in the forecast horizon, i.e. between 1 and 24 were studied. For the seasonal analysis of the performance of the models, the predictions for each of the stratified NAM forecasts were compared for multiple seasons. For this purpose, based on the general seasonal trends in the target location i.e. Athens, Georgia, the periods in a year were divided into four seasons: 
+\begin{itemize}
+    \itemsep0em
+    \item Summer (May - July)
+    \item Autumn (August - October)
+    \item Winter (November - January)
+    \item Spring (February - April)
+\end{itemize}
+
+\begin{figure}[ht]
+    \begin{center}
+    	\includegraphics[width=\textwidth, height=12cm]{chapter3/fig_diurnal_arrayb.png}
+    	\caption[Stratified diurnal analysis of day-ahead irradiance predictions for fixed-axis array]{Stratified analysis of day-ahead irradiance predictions for fixed-axis array (array B): (left-top) 00h NAM forecasts, (right-top) 16h NAM forecasts, (left-bottom) 12h NAM forecasts, (right-bottom) 18h NAM forecasts. Local time of day (6A.M to 6P.M) at the target location for each of the NAM forecasts is indicated in light yellow.}
+    	\label{fig:fig_stratified_diurnal}
+    \end{center}
+\end{figure}
+
+\par The NAM forecasts are released at 00h, 06h, 12h and 18h UTC. To create the NAM dataset for training with the machine learning models, these timestamps were made time-zone aware with respect to the target location (Athens, Georgia), and corresponding solar irradiance observations were collected. Athens is -5.00 hours with respect to UTC in the standard time zone, and -4.00 hours with respect to UTC during \textit{daylight saving time}. Under the assumption that the time in Athens, Georgia was constantly -4.00 hours with respect to UTC throughout the year, in Figure~\ref{fig:fig_stratified_diurnal}, the \textit{time of day} (i.e. between 6.00 AM and 6.00 PM) was identified for each of 00h, 06h, 12h and 18h UTC. In the forecast horizon, i.e. in the consequent 24 hours, these hours were marked in yellow so as to signify daytime. 
+
+\begin{figure}[ht]
+    \begin{center}
+    	\includegraphics[width=\textwidth, height=12cm]{chapter3/fig_seasonal_arrayb.png}
+    	\caption[Stratified seasonal analysis of day-ahead irradiance predictions for fixed-axis array]{Stratified analysis of irradiance predictions across different seasons, namely \textit{Summer} (May-July), \textit{Autumn} (August-October), \textit{Winter} (November-January), \textit{Spring} (February-April) for fixed-axis solar array (array B): (left-top) 00h NAM forecasts, (right-top) 16h NAM forecasts, (left-bottom) 12h NAM forecasts, (right-bottom) 18h NAM forecasts.}
+    	\label{fig:fig_stratified_seasonal}
+    \end{center}
+\end{figure}
+
+\par In Figure~\ref{fig:fig_stratified_diurnal}, it can be seen that the performance of most of the machine learning models is comparable regardless of daytime or night-time. While the \textit{support vector regression} models performed well during daytime, they performed slightly worse during night-time, only performing better than the simple \textit{linear regression}. The performance of \textit{extreme gradient boosted trees} was most intriguing, as during daytime, it performed worse than the simple \textit{linear regression} models as well. Based on Table~\ref{Tab:fs_array_b}, it can be inferred that the performance of the \textit{extreme gradient boosted trees} was improved, and close to the better performing \textit{random forests} mainly because of their better performance during night-time.
+
+\par For the stratified NAM forecasts, the performance of the machine learning models across different seasons as described earlier, is demonstrated in Figure~\ref{fig:fig_stratified_seasonal}. As was noted earlier, simple \textit{linear regression}, followed by \textit{support vector regression} perform relatively poorly during night-time; \textit{extreme gradient boosted trees} generally perform the worst during daytime. The reference time corresponding to 00h NAM forecasts, irrespective of being in the standard time zone or daylight saving time, across seasons, generally represents night-time in Athens, Georgia. Here, the inability of the simple \textit{linear regression} models to capture the night-time is attested in the figure (top-left).
+
+\par The reference time corresponding to 06h NAM forecasts represent local night-time across seasons as well, irrespective of the time zone difference offset. For these weather forecasts as well, simple \textit{linear regression} fails to capture the properties of night-time, recording $MAE$ of \textasciitilde 27 $W/m^2$ across seasons. The other machine learning models too, generally realized the night-time better across seasons, with minor errors for the spring season. The reference times corresponding to 12h NAM forecasts locally represent early morning. During the early mornings in summer, the amount of sunlight in the day is higher, as compared to the other seasons. This was realized better by the machine learning models, as can be shown in the figure (bottom-left). The reference times corresponding to 18h NAM forecasts locally represent afternoon. During this time, the sun is usually at its highest point, and thus the average temperature and solar radiation on the surface of the earth are high. This can be observed in the figure (bottom-right), where such a pattern is observed owing to the high error rates in summer and autumn. As observed earlier, owing to efficacy of the models in capturing the night-time better, these errors drop in winter and spring, where the amount of solar radiation is lower.
+
+\newpage
