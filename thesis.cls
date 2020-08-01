@@ -42,7 +42,6 @@
 \usepackage{setspace}
 \doublespacing
 
-
 % ----------------------------------------------------------------------
 %                   List of Figures/Tables Configuration
 % ----------------------------------------------------------------------
@@ -55,6 +54,7 @@
 
 % Package import for figures
 \usepackage{graphicx}
+\usepackage{subfig}
 % Allows using floating point 'H', which force places figure.
 \usepackage{float}
 
@@ -66,6 +66,12 @@
 \usepackage{booktabs}
 % Package ensures multiple rows in tables
 \usepackage{multirow}
+% Package to enumerate with labels
+\usepackage{enumitem}
+% Package to set white-space between \subsubsection command.
+\usepackage{titlesec}
+\titlespacing*{\subsubsection}{0pt}{0.05\baselineskip}{0.05\baselineskip}
+
 
 % Command \listchaptername defines heading for Table of Contents
 \newcommand{\listchaptername}{%
@@ -191,7 +197,7 @@
     \vspace{0.5\baselineskip}
     \normalsize
     \noindent
-    \textbf{\thechapter.\thesubchapter \MakeUppercase{ #1}}
+    \textbf{\thechapter.\thesubchapter \MakeUppercase{  #1}}
     \vspace{0.5\baselineskip}
 
     % Do not remove the above blank line. It helps print blank space
@@ -213,15 +219,6 @@
     \noindent
     \normalsize
     \textbf{\thechapter.\thesubchapter.\thesubsubchapter%
-            \MakeUppercase{ #1}}
-    \vspace{0.5\baselineskip}
-
-    % Do not remove the above blank line. It helps print blank space
-    % (in this case, double-space) between sub-chapter heading and
-    % contents.
-    \addcontentsline{chl}{chapter}
-    {\qquad\qquad\protect\numberline{
-        \thechapter.\thesubchapter.\thesubsubchapter
-        } \hspace{1em} #1
-    }
+            \MakeUppercase{  #1}}
+    \vspace{0.1\baselineskip}
 }

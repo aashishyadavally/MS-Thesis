@@ -1,0 +1,288 @@
+\newpage
+
+% Add APPENDIX to Table of Contents
+\addcontentsline{chl}{chapter}{~APPENDIX}
+
+% Add APPENDIX sub-chapters to Table of Contents
+\addcontentsline{chl}{chapter}
+{\qquad\protect\numberline{
+    A} \hspace{0.5em} Model Hyperparameters
+}
+
+% Print APPENDIX Title
+\begin{center}
+    \textbf{APPENDIX A}
+
+    \MakeUppercase{\textbf{Model Hyperparameters}}
+    \vspace*{\baselineskip}
+\end{center}
+
+% Contents:
+\subsection*{A.1 \hspace{0.5em} 1 x 1 Grid Size}
+\subsubsection*{A.1.1 \hspace{0.5em} Dual-Axis Tracking Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 1000, \textit{epsilon} : 1,  \textit{gamma} : 0.01 
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} : 'mae', \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 11, \textit{leaf\_size} : 20, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 650, \textit{max\_depth} : 20, \textit{min\_impurity\_decrease} : 0.1
+    \end{itemize}
+
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 700, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01 
+    \end{itemize}
+
+\end{itemize}
+
+\subsubsection*{A.1.2 \hspace{0.5em} Fixed-Axis Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 500, \textit{epsilon} : 1,  \textit{gamma} : 0.01
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} : 'mae', \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 11, \textit{leaf\_size} : 25, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 500, \textit{max\_depth} : 40, \textit{min\_impurity\_decrease} : 0.2
+    \end{itemize}
+
+%    \newgeometry{top=1in, left=1.5in, right=1in, bottom=1in}
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 600, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01 
+    \end{itemize}
+
+\end{itemize}
+
+\subsubsection*{A.1.3 \hspace{0.5em} Single-Axis Tracking Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 500, \textit{epsilon} : 1,  \textit{gamma} : 0.01
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} 'mae': , \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 11, \textit{leaf\_size} : 5, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 300, \textit{max\_depth} : 20, \textit{min\_impurity\_decrease} : 0.1
+    \end{itemize}
+
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 600, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01
+    \end{itemize}
+
+\end{itemize}
+
+\subsection*{A.2 \hspace{0.5em} 3 x 3 Grid Size}
+\subsubsection*{A.2.1 \hspace{0.5em} Dual-Axis Tracking Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 500, \textit{epsilon} : 2,  \textit{gamma} : 0.01 
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} : 'mae', \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 9, \textit{leaf\_size} : 40, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 500, \textit{max\_depth} : 20, \textit{min\_impurity\_decrease} : 0.2
+    \end{itemize}
+
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 550, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01 
+    \end{itemize}
+
+\end{itemize}
+
+\subsubsection*{A.2.2 \hspace{0.5em} Fixed-Axis Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 500, \textit{epsilon} : 3,  \textit{gamma} : 0.01 
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} : 'mae', \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25 
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 9, \textit{leaf\_size} : 60, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 550, \textit{max\_depth} : 40, \textit{min\_impurity\_decrease} : 0.1
+    \end{itemize}
+
+%    \newgeometry{top=1in, left=1.5in, right=1in, bottom=1in}
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 700, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01
+    \end{itemize}
+
+\end{itemize}
+
+\subsubsection*{A.2.3 \hspace{0.5em} Single-Axis Tracking Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 1000, \textit{epsilon} : 1,  \textit{gamma} : 0.01
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} : 'mae', \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25 
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 9, \textit{leaf\_size} : 60, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 300, \textit{max\_depth} : 20, \textit{min\_impurity\_decrease} : 0.1
+    \end{itemize}
+
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 600, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01
+    \end{itemize}
+
+\end{itemize}
+
+\subsection*{A.3 \hspace{0.5em} 5 x 5 Grid Size}
+\subsubsection*{A.3.1 \hspace{0.5em} Dual-Axis Tracking Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 500, \textit{epsilon} : 3,  \textit{gamma} : 0.01
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} : 'mae', \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 9, \textit{leaf\_size} : 30, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 550, \textit{max\_depth} : 60, \textit{min\_impurity\_decrease} : 0.4
+    \end{itemize}
+
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 200, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01 
+    \end{itemize}
+
+\end{itemize}
+
+\subsubsection*{A.3.2 \hspace{0.5em} Fixed-Axis Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 500, \textit{epsilon} : 2,  \textit{gamma} : 0.01
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} : 'mae', \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25 
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 9, \textit{leaf\_size} : 20, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 700, \textit{max\_depth} : 50, \textit{min\_impurity\_decrease} : 0.3 
+    \end{itemize}
+
+%    \newgeometry{top=1in, left=1.5in, right=1in, bottom=1in}
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 200, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01 
+    \end{itemize}
+
+\end{itemize}
+
+\subsubsection*{A.3.3 \hspace{0.5em} Single-Axis Tracking Solar Array}
+\begin{itemize}
+    \item Support Vector Regression
+    \begin{itemize}
+        \item \textit{C} : 1000, \textit{epsilon} : 2,  \textit{gamma} : 0.01 
+    \end{itemize}
+
+    \item Decision Tree 
+    \begin{itemize}
+        \item \textit{criterion} : 'mae', \textit{splitter} : 'random', \textit{max\_depth} : 10, \textit{min\_impurity\_decrease} : 0.25 
+    \end{itemize}
+
+    \item k-Nearest Neighbors 
+    \begin{itemize}
+        \item \textit{n\_neighbors} : 10, \textit{leaf\_size} : 20, \textit{p} : 1
+    \end{itemize}
+
+    \item Random Forests 
+    \begin{itemize}
+        \item \textit{n\_estimators} : 300, \textit{max\_depth} : 20, \textit{min\_impurity\_decrease} : 0.1
+    \end{itemize}
+
+    \item Extreme Gradient Boosted Trees
+    \begin{itemize}
+        \item \textit{n\_estimators} : 200, \textit{max\_depth} : 5, \textit{learning\_rate} : 0.01 
+    \end{itemize}
+
+\end{itemize}
+
+\newpage
